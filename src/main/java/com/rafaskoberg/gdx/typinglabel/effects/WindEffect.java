@@ -12,7 +12,7 @@ public class WindEffect extends Effect {
     private static final float DEFAULT_INTENSITY = 0.375f;
     private static final float DISTANCE_X_RATIO  = 1.5f;
     private static final float DISTANCE_Y_RATIO  = 1.0f;
-    private static final float IDEAL_DELTA       = 1 / 60f;
+    private static final float IDEAL_DELTA       = 60f;
 
     private float        noiseCursorX = 0;
     private float        noiseCursorY = 0;
@@ -64,8 +64,8 @@ public class WindEffect extends Effect {
     @Override
     protected void onApply(TypingGlyph glyph, int localIndex, float delta) {
         // Calculate progress
-        float progressModifier = (1f / intensity) * DEFAULT_INTENSITY;
-        float normalSpacing = (1f / spacing) * DEFAULT_SPACING;
+        float progressModifier = DEFAULT_INTENSITY / intensity;
+        float normalSpacing = DEFAULT_SPACING / spacing;
         float progressOffset = localIndex / normalSpacing;
         float progress = calculateProgress(progressModifier, progressOffset);
 
