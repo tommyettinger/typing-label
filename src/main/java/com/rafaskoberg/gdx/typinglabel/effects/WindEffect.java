@@ -1,6 +1,7 @@
 
 package com.rafaskoberg.gdx.typinglabel.effects;
 
+import com.badlogic.gdx.utils.NumberUtils;
 import com.rafaskoberg.gdx.typinglabel.Effect;
 import com.rafaskoberg.gdx.typinglabel.TypingGlyph;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -56,7 +57,7 @@ public class WindEffect extends Effect {
         super.update(delta);
 
         // Update noise cursor
-        float changeAmount = 0.2f * intensity * DEFAULT_INTENSITY * delta * IDEAL_DELTA;
+        float changeAmount = 0.15f * intensity * DEFAULT_INTENSITY * delta * IDEAL_DELTA;
         noiseCursorX += changeAmount;
         noiseCursorY += changeAmount;
     }
@@ -70,11 +71,9 @@ public class WindEffect extends Effect {
         float progress = calculateProgress(progressModifier, progressOffset);
 
         // Calculate noise
-        float indexOffset = localIndex * 0.025f * spacing;
-        float noiseX = noise1D(-1234, noiseCursorX + indexOffset);
-        float noiseY = noise1D(54321, noiseCursorY + indexOffset);
-//        float noiseX = noise.getNoise(noiseCursorX + indexOffset, 0);
-//        float noiseY = noise.getNoise(0, noiseCursorY + indexOffset);
+        float indexOffset = localIndex * 0.05f * spacing;
+        float noiseX = octaveNoise1D(noiseCursorX + indexOffset, 123);
+        float noiseY = octaveNoise1D(noiseCursorY + indexOffset, -4321);
 
         // Calculate offset
         float lineHeight = getLineHeight();
@@ -93,36 +92,32 @@ public class WindEffect extends Effect {
         glyph.xoffset += x;
         glyph.yoffset += y;
     }
+
     /**
-     * A type of seeded 1D noise that takes an int seed and a float distance, and is optimized for
-     * usage on GWT. This uses quintic interpolation between random peak or valley points, with two
-     * octaves generated. It is similar to Simplex noise if you only change x or only change y.
-     * @param seed an int seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
-     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
-     * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
+     * Quilez' 1D noise, with some changes to work on the CPU. Takes a distance x and any int seed, and produces a
+     * smoothly-changing value as x goes up or down and seed stays the same. Uses a quartic curve.
+     * @param x should go up and/or down steadily and by small amounts (less than 1.0, certainly)
+     * @param seed should stay the same for a given curve
+     * @return a noise value between -1.0 and 1.0
      */
-    public static float noise1D(int seed, float value)
-    {
-        int floor = value >= 0f ? (int) value : (int) value - 1;
-        int z = seed + floor;
-        float start = (((z = (z ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f;
-        float end = (((z = (seed + floor + 1 ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f;
-        float u = value - floor;
-        u *= u * u * (u * (u * 6 - 15) + 10);
-        u = (1 - u) * start + u * end;
+    private static float noise1D(float x, final int seed) {
+        x += seed * 0x1p-24f;
+        final int xFloor = x >= 0f ? (int) x : (int) x - 1,
+                rise = 1 - ((x >= 0f ? (int) (x + x) : (int) (x + x) - 1) & 2);
+        x -= xFloor;
+        final float h = NumberUtils.intBitsToFloat((int)((seed + xFloor ^ 0x9E3779B97F4A7C15L) * 0xD1B54A32D192ED03L >>> 41) | 0x42000000) - 48f;
+        x *= x - 1f;
+        return rise * x * x * h;
+    }
 
-        seed ^= 0xC13FA9A9;
-        value = (value + 1.5f) * 1.6180339887498949f;
-
-        floor = value >= 0f ? (int) value : (int) value - 1;
-        z = seed + floor;
-        start = (((z = (z ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f;
-        end = (((z = (seed + floor + 1 ^ 0xD1B54A35) * 0x102473) ^ (z << 11 | z >>> 21) ^ (z << 19 | z >>> 13)) * ((z ^ z >>> 15) | 0xFFE00001) ^ z) * 0x0.ffffffp-31f;
-        float v = value - floor;
-        v *= v * v * (v * (v * 6 - 15) + 10);
-        v = (1 - v) * start + v * end;
-
-        return u * 0.675f + v * 0.325f;
+    /**
+     * Just gets two octaves of {@link #noise1D(float, int)}; still has a range of -1 to 1.
+     * @param x should go up and/or down steadily and by small amounts (less than 1.0, certainly)
+     * @param seed should stay the same for a given curve
+     * @return a noise value between -1.0 and 1.0
+     */
+    private static float octaveNoise1D(float x, int seed){
+        return (noise1D(x, seed) * 2f + noise1D(x * 1.9f, ~seed)) * 0.3333333333333333f;
     }
 
 }
