@@ -1,7 +1,13 @@
-[Unreleased]
+[1.4.1]
+- BREAKING CHANGE: The dependency on libGDX has been updated to 1.14.0. This precipitated another breaking change.
+- BREAKING CHANGE: TypingLabel#getOriginalText() now returns a CharArray, not a libGDX StringBuilder, because libGDX no longer contains that class.
+- The test now uses LWJGL3 instead of LWJGL2, which allows it to run on newer MacOS hardware.
+- The RegExodus dependency has updated to 0.1.19, which shouldn't have any major breaking changes, just feature additions and fixes for some platforms (RoboVM and GWT).
+
+[1.4.0]
 - BREAKING CHANGE: Added support for multiple TypingListeners in TypingLabel. Methods "getTypingListener" and "getTypingListeners" were replaced by "setTypingListener" and "addTypingListener".
 - Added If Conditionals! {IF=GENDER;f=She;m=He;t=Them;Unknown} -- See details in the wiki.
-- Updated Regexodus dependency for GWT. If you use GWT and inherit Regexodus in your project, follow the installation instructions again, as some of them have changed (namely the `inherits` line).
+- Updated RegExodus dependency for GWT. If you use GWT and inherit RegExodus in your project, follow the installation instructions again, as some of them have changed (namely the `inherits` line).
 - Fixed color tags being applied to the incorrect glyph indices. Thanks @tommyettinger!
 
 [1.3.0]
