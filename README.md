@@ -18,7 +18,7 @@ Open _build.gradle_ in project root and add this to the _ext_ section under _all
 
 ```groovy
 typingLabelVersion = '1.4.0'
-regExodusVersion = '0.1.19' // Only if you're using HTML / GWT
+regExodusVersion = '0.1.20' // Only if you're using HTML / GWT
 ```
 
 #### Core module
@@ -71,24 +71,26 @@ features, offers extended markup such as bold and oblique, and much more.
 
 (Tommy Ettinger has hijacked the README.md at this point.)
 
-Other features in TextraTypist include inline images such as emoji, click-able links that go to a URL, click-able words that trigger an
-event via TypingListener, rotating glyphs in-place (with various effects that use this), stretching/squashing individual glyphs (also
-used by various effects), named colors that can mix and alter their parts (like `darker dull blue green`),
-no usage of reflection (useful for Graal Native Images), various ways to adjust fonts to force monospace, change line-height, increase
-or decrease glyph width, experimental support for justifying text... It goes on for a while.
+Other features in TextraTypist include inline images such as emoji, click-able links that go to a URL, click-able words
+that trigger an event via TypingListener, rotating glyphs in-place (with various effects that use this),
+stretching/squashing individual glyphs (also used by various effects), named colors that can mix and alter their parts
+(like `darker dull blue green`), no usage of reflection except what Skin uses (useful for Graal Native Images), various
+ways to adjust fonts to force monospace, change line-height, increase or decrease glyph width, experimental support for
+justifying text... It goes on for a while.
 
-However, TextraTypist isn't as drop-in compatible as Typing-Label with scene2d.ui support! The `TypingLabel` in this library extends
-`Label` from scene2d.ui, while the one in TextraTypist does not, and in fact there's a whole duplicate set of scene2d.ui widgets that
-use TextraTypist's `Font` class instead of `BitmapFont`. These aren't always necessary to use, but they are needed if you need most of
-the mentioned TextraTypist features, like how a TextraSelectBox can have emoji icons in its text rows.
+However, TextraTypist isn't as drop-in compatible as Typing-Label with scene2d.ui support! The `TypingLabel` in this
+library extends `Label` from scene2d.ui, while the one in TextraTypist does not, and in fact there's a whole duplicate
+set of scene2d.ui widgets that use TextraTypist's `Font` class instead of `BitmapFont`. These aren't always necessary to
+use, but they are needed if you need most of the mentioned TextraTypist features, like how a TextraSelectBox can have
+emoji icons in its text rows.
 
-A few other features are present in Typing-Label but are absent from TextraTypist. TextraTypist uses both square braces and
-curly brackets for different types of markup, so it doesn't have an easy way to swap out an effect like `{RAINBOW}` and make it
-use a different syntax, like `<<RAINBOW>>`. Typing-Label can do this! TextraTypist can, at most, use the alternate syntax
-`[-RAINBOW]` to be compatible with I18N properties files.
+A few other features are present in Typing-Label but are absent from TextraTypist. TextraTypist uses both square braces
+and curly brackets for different types of markup, so it doesn't have an easy way to swap out an effect like `{RAINBOW}`
+and make it use a different syntax, like `<<RAINBOW>>`. Typing-Label can do this! TextraTypist can, at most, use the
+alternate syntax `[-RAINBOW]` to be compatible with I18N properties files.
 
-When gdx-liftoff added effects to warning messages to draw attention to them, it added Typing-Label as a dependency, and it applied
-smoothly in-place. When gdx-liftoff updated to libGDX 1.14.0, Typing-Label wasn't compatible immediately, so the dependency switched
-to TextraTypist -- because TextraTypist ~~stole~~ built upon mostly the same code as Typing-Label, the needed changes were small.
-Typing-Label should be compatible with libGDX 1.14.0 as of now (at least via JitPack, and probably via a Maven Central release), so
-this isn't going to be a problem in the future.
+When gdx-liftoff added effects to warning messages to draw attention to them, it added Typing-Label as a dependency, and
+it applied smoothly in-place. When gdx-liftoff updated to libGDX 1.14.0, Typing-Label wasn't compatible immediately, so
+the dependency switched to TextraTypist -- because TextraTypist ~~stole~~ built upon mostly the same code as
+Typing-Label, the needed changes were small. Typing-Label should be compatible with libGDX 1.14.0 as of now (at least
+via JitPack, and probably via a Maven Central release), so this isn't going to be a problem in the future.

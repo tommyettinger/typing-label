@@ -2,7 +2,7 @@
 - BREAKING CHANGE: The dependency on libGDX has been updated to 1.14.0. This precipitated another breaking change.
 - BREAKING CHANGE: TypingLabel#getOriginalText() now returns a CharArray, not a libGDX StringBuilder, because libGDX no longer contains that class.
 - The test now uses LWJGL3 instead of LWJGL2, which allows it to run on newer MacOS hardware.
-- The RegExodus dependency has updated to 0.1.19, which shouldn't have any major breaking changes, just feature additions and fixes for some platforms (RoboVM and GWT).
+- The RegExodus dependency has updated to 0.1.20, which shouldn't have any major breaking changes, just feature additions and fixes for some platforms (RoboVM and GWT). It also should be a slightly smaller dependency.
 
 [1.4.0]
 - BREAKING CHANGE: Added support for multiple TypingListeners in TypingLabel. Methods "getTypingListener" and "getTypingListeners" were replaced by "setTypingListener" and "addTypingListener".
